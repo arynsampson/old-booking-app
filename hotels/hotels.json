@@ -1,10 +1,14 @@
 [
     {
     "name": "The Commodore",
-    "dailyRate": 2500
+    "dailyRate": 2500,
+    "features": ["Pool", "Bar", "Wi-Fi", "Spa", "Restaurant", "Child friendly"],
+    "starRating": 4.5
     },
     {
     "name": "One&Only",
-    "dailyRate": 4500
+    "dailyRate": 3500,
+    "features": ["Pool", "Bar", "Wi-Fi", "Spa", "Restaurant", "Gym", "Ocean adventures"],
+    "starRating": 4.7
     }
 ]
