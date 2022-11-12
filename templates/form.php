@@ -43,7 +43,7 @@
 
         <div>
             <label for="email">Email:</label>
-            <input type="text" name="email" placeholder="Please enter your email">
+            <input type="email" name="email" placeholder="Please enter your email">
             <p class="error"><?php echo $errors['email'] ?? ''; ?></p>
         </div>
 
