@@ -52,7 +52,7 @@
             <select name="hotel" id="hotel">
                 <option value=""></option>
                 <option value="oneandonly">One&amp;Only</option>
-                <option value="commodore">The Commodore Hotel</option>
+                <option value="commodore">The Commodore</option>
             </select>
             <p class="error"><?php echo $errors['hotel'] ?? ''; ?></p>
         </div>
