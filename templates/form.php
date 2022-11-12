@@ -1,5 +1,7 @@
 <?php
 
+    session_start();
+
     require('input_validator.php');
 
     if (isset($_POST['submit'])) {
@@ -8,11 +10,17 @@
         $validation = new InputValidator($_POST);
         $errors = $validation->validateForm();
         
-        //save user input
-        
-        // direct user to next screen
-    }
 
+        // check if errors are present
+        if(!array_filter($errors)) {
+            // assign input to SESSION
+            foreach($_POST as $key => $value) {
+                $_SESSION[$key] = $value;
+            }
+            // direct user to next screen
+            header('Location: templates/compare.php');
+        }
+    }
 ?>
 
 
