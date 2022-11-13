@@ -51,8 +51,8 @@
             <label for="hotel">Select your hotel by clicking the dropdown menu below:</label>
             <select name="hotel" id="hotel">
                 <option value=""></option>
-                <option value="oneandonly">One&amp;Only</option>
-                <option value="commodore">The Commodore</option>
+                <option value="One&Only">One&amp;Only</option>
+                <option value="The Commodore">The Commodore</option>
             </select>
             <p class="error"><?php echo $errors['hotel'] ?? ''; ?></p>
         </div>
