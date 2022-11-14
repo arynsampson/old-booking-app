@@ -5,6 +5,12 @@
     $hotels = json_decode(file_get_contents(dirname(__DIR__).'/hotels/hotels.json'));
     $hotel_chosen;
     $hotel_to_compare;
+    $final_hotel_choice;
+
+    function dateDifference($date1, $date2) {
+        $dateDifferenceAmount = date_diff(date_create($date1), date_create($date2));
+        return $dateDifferenceAmount->format("%a");
+    }
 
     // print_r($_SESSION);
     foreach($hotels as $hotel) {
@@ -26,6 +32,26 @@
         }
     }
 
+    $_SESSION['numberOfDays'] = dateDifference($_SESSION['checkInDate'], $_SESSION['checkOutDate']);
+    $_SESSION['totalCost'] = $_SESSION['numberOfDays'] * $hotel_chosen['dailyRate'];
+
+    if($_POST['hotel'] === $hotel_chosen['name']) {
+        global $final_hotel_choice;
+        $final_hotel_choice = array(
+            'firstname' => $_SESSION['firstname'],
+            'surname' => $_SESSION['surname'],
+            'email' => $_SESSION['email'],
+            'chosenHotel' => $_SESSION['hotel'],
+            'checkInDate' => $_SESSION['checkInDate'],
+            'checkOutDate' => $_SESSION['checkOutDate'],
+            'numberOfDays' => $_SESSION['numberOfDays'],
+            'totalCost' => $_SESSION['totalCost'],
+        );
+
+        $_SESSION['userBooking'] = $final_hotel_choice;
+        print_r($_SESSION['userBooking']);
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -42,10 +68,9 @@
 
 <body>
 
-
+    <div class="container">
     <p>Hi there, <?php echo $_SESSION['firstname'] . ' ' . $_SESSION['surname']; ?></p>
 
-    <div class="container">
         <div class="row">
 
             <div class="card col">
@@ -81,9 +106,20 @@
 
         </div>
 
-        
-    </div>
+        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="POST">
+            <div>
+                <label for="hotel" class="form-label">Select your hotel:</label>
+                <select name="hotel" id="hotel" class="form-control">
+                    <option value=""></option>
+                    <option value="One&Only">One&amp;Only</option>
+                    <option value="The Commodore">The Commodore</option>
+                </select>
+                <p class="error"><?php echo $errors['hotel'] ?? ''; ?></p>
+            </div>
 
+            <input type="submit" value="Book" name="submit">
+        </form>
+    </div>
 
 </body>
 
