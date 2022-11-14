@@ -14,7 +14,6 @@
                 'name' => $hotel->name,
                 'dailyRate' => $hotel->dailyRate,
                 'features' => $hotel->features,
-                'starRating' => $hotel->starRating,
             );
             // CHECK WHY RETURN BROKE THIS
         } else {
@@ -23,37 +22,74 @@
                 'name' => $hotel->name,
                 'dailyRate' => $hotel->dailyRate,
                 'features' => $hotel->features,
-                'starRating' => $hotel->starRating,
             );
         }
     }
 
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
 
-<div>
-    <h3><?php echo $_SESSION['hotel']; ?></h3>
-    <p><?php echo $_SESSION['firstname']; ?></p>
-    <p><?php echo $_SESSION['surname']; ?></p>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../styles/styles.css?v=<?php echo time(); ?>">
+    <title>Booking App</title>
+</head>
 
-    <div>
-        <p><?php echo $_SESSION['checkInDate']; ?></p>
-        <p><?php echo $_SESSION['checkOutDate']; ?></p>
+<body>
+
+    <?php require('header.php'); ?>
+
+
+    <p>Hi there, <?php echo $_SESSION['firstname'] . ' ' . $_SESSION['surname']; ?></p>
+
+    <div class="container">
+        <div class="row">
+
+            <div class="card col">
+                <div class="card-body">
+                    
+                    <h5 class="card-title"><?php echo $_SESSION['hotel']; ?></h5>
+                    <p class="card-text">Per night: R<?php echo $hotel_chosen['dailyRate']; ?></p>
+                    <p class="card-text">Check-in: <?php echo $_SESSION['checkInDate']; ?></p>
+                    <p class="card-text">Check-out: <?php echo $_SESSION['checkOutDate']; ?></p>
+
+                    <ul>
+                        <?php foreach($hotel_chosen['features'] as $feature): ?>
+                            <li><?php echo $feature; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+
+                </div>
+            </div>
+
+            <div class="card col">
+                <div class="card-body">
+                    <h5 class="card-title"><?php echo $hotel_to_compare['name']; ?></h5>
+                    <p class="card-text">Per night R:<?php echo $hotel_to_compare['dailyRate']; ?></p>
+
+                    <ul>
+                        <?php foreach($hotel_to_compare['features'] as $feature): ?>
+                            <li><?php echo $feature; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                    
+                 </div>
+            </div>
+
+        </div>
+
+        
     </div>
 
-     <?php foreach($hotel_chosen['features'] as $feature): ?>
-        <p><?php echo $feature; ?></p>
-    <?php endforeach; ?>
 
-    
-</div>
 
-<div>
-    <h3><?php echo $hotel_to_compare['name']; ?></h3>
-    <p>R<?php echo $hotel_to_compare['dailyRate']; ?></p>
-    <p><?php echo $hotel_to_compare['starRating']; ?></p>
+    <?php require('footer.php'); ?>
 
-    <?php foreach($hotel_to_compare['features'] as $feature): ?>
-        <p><?php echo $feature; ?></p>
-    <?php endforeach; ?>
-</div>
+</body>
+
+</html>
