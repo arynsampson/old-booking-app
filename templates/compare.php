@@ -42,8 +42,6 @@
 
 <body>
 
-    <?php require('header.php'); ?>
-
 
     <p>Hi there, <?php echo $_SESSION['firstname'] . ' ' . $_SESSION['surname']; ?></p>
 
@@ -86,9 +84,6 @@
         
     </div>
 
-
-
-    <?php require('footer.php'); ?>
 
 </body>
 
