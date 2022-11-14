@@ -1,3 +1,47 @@
 .error {
     color: red;
+    font-size: 14px;
+    padding-left: 1px;
+}
+
+body {
+    background: lightgray;
+}
+
+h1 {
+    text-transform: uppercase;
+}
+
+#heading-colour {
+    color: #0d6efd;
+}
+
+
+
+
+@media only screen and (min-width: 1100px) {
+    .content-container {
+        padding: 10px;
+        max-width: 650px;
+        margin: 0 auto;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 50% 50%;
+        grid-template-rows: auto;
+        gap: 5px;
+        justify-content: center;
+        background-color: white;
+        border-radius: 5px;
+        padding: 15px;
+    }
+
+    .btn-primary {
+        grid-column: 1 / -1;
+    }
+
+    #checkOutDate {
+        grid-column: 2 / -1;
+    }
 }
