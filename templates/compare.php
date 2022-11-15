@@ -1,55 +1,33 @@
 <?php
     
+    require('../hotel_functions/hotel_functions.php');
+
     session_start(); 
 
-    $hotels = json_decode(file_get_contents(dirname(__DIR__).'/hotels/hotels.json'));
-    $hotel_chosen;
-    $hotel_to_compare;
-    $final_hotel_choice;
-
-    function dateDifference($date1, $date2) {
-        $dateDifferenceAmount = date_diff(date_create($date1), date_create($date2));
-        return $dateDifferenceAmount->format("%a");
-    }
+    $hotels = json_decode(file_get_contents(dirname(__DIR__).'/mock_data/hotels.json'));
+    $hotel_chosen = $hotel_to_compare = $final_hotel_choice = [];
 
     // print_r($_SESSION);
     foreach($hotels as $hotel) {
+        global $hotel_to_compare;
         if($hotel->name !== $_SESSION['hotel']) {
-            global $hotel_to_compare;
-            $hotel_to_compare = array(
-                'name' => $hotel->name,
-                'dailyRate' => $hotel->dailyRate,
-                'features' => $hotel->features,
-            );
-            // CHECK WHY RETURN BROKE THIS
+            $hotel_to_compare = setHotel($hotel);
         } else {
-            global $hotel_chosen;
-            $hotel_chosen = array(
-                'name' => $hotel->name,
-                'dailyRate' => $hotel->dailyRate,
-                'features' => $hotel->features,
-            );
+            $hotel_chosen = setHotel($hotel);
         }
     }
 
     $_SESSION['numberOfDays'] = dateDifference($_SESSION['checkInDate'], $_SESSION['checkOutDate']);
-    $_SESSION['totalCost'] = $_SESSION['numberOfDays'] * $hotel_chosen['dailyRate'];
+    $_SESSION['totalCost'] = totalStayCost($_SESSION['numberOfDays'], $hotel_chosen['dailyRate']);
 
-    if($_POST['hotel'] === $hotel_chosen['name']) {
+    if(isset($_POST['submit'])) {
         global $final_hotel_choice;
-        $final_hotel_choice = array(
-            'firstname' => $_SESSION['firstname'],
-            'surname' => $_SESSION['surname'],
-            'email' => $_SESSION['email'],
-            'chosenHotel' => $_SESSION['hotel'],
-            'checkInDate' => $_SESSION['checkInDate'],
-            'checkOutDate' => $_SESSION['checkOutDate'],
-            'numberOfDays' => $_SESSION['numberOfDays'],
-            'totalCost' => $_SESSION['totalCost'],
-        );
-
+        if($_POST['hotel'] === $hotel_chosen['name']) {
+            $final_hotel_choice = userFinalBookingInfo($_SESSION, $hotel_chosen['name'], $hotel_chosen['dailyRate']);
+        } else {
+            $final_hotel_choice = userFinalBookingInfo($_SESSION, $hotel_to_compare['name'], $hotel_to_compare['dailyRate']);
+        }
         $_SESSION['userBooking'] = $final_hotel_choice;
-        print_r($_SESSION['userBooking']);
     }
 
 ?>
@@ -63,13 +41,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../styles/styles.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="../styles/compare.css">
+
     <title>Booking App</title>
 </head>
 
 <body>
 
     <div class="container">
-    <p>Hi there, <?php echo $_SESSION['firstname'] . ' ' . $_SESSION['surname']; ?></p>
+    <h2>Hi there, <?php echo $_SESSION['firstname'] . ' ' . $_SESSION['surname']; ?></h2>
 
         <div class="row">
 
@@ -83,7 +63,7 @@
 
                     <ul>
                         <?php foreach($hotel_chosen['features'] as $feature): ?>
-                            <li><?php echo $feature; ?></li>
+                            <li class="pill"><?php echo $feature; ?></li>
                         <?php endforeach; ?>
                     </ul>
 
@@ -97,7 +77,7 @@
 
                     <ul>
                         <?php foreach($hotel_to_compare['features'] as $feature): ?>
-                            <li><?php echo $feature; ?></li>
+                            <li class="pill"><?php echo $feature; ?></li>
                         <?php endforeach; ?>
                     </ul>
                     
@@ -106,11 +86,14 @@
 
         </div>
 
-        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="POST">
+       
+    </div>
+
+    <div class="form-container">
+<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="POST">
             <div>
                 <label for="hotel" class="form-label">Select your hotel:</label>
                 <select name="hotel" id="hotel" class="form-control">
-                    <option value=""></option>
                     <option value="One&Only">One&amp;Only</option>
                     <option value="The Commodore">The Commodore</option>
                 </select>
@@ -120,6 +103,7 @@
             <input type="submit" value="Book" name="submit">
         </form>
     </div>
+     
 
 </body>
 
