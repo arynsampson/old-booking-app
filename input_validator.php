@@ -16,23 +16,25 @@
 
         public function validateForm() {
 
+            echo $this->data['firstname'];
+
         // validate firstname 
-        if(empty($this->data['firstname']) | strlen($this->data['firstname'] < 2)) {
-            $this->errors['firstname'] = 'Please enter a valid name with at 2 characters.';
+        if(!empty($this->data['firstname']) && strlen($this->data['firstname']) < 2) {
+            $this->errors['firstname'] = 'Please enter a valid name with minimum 2 characters.';
         } else {
             $_POST['firstname'] = $this->data['firstname'];
         }
 
         // validate surname 
-        if(empty($this->data['surname']) | strlen($this->data['surname'] < 2)) {
-            $this->errors['surname'] = 'Please enter a valid surname with at 2 characters.';
+        if(!empty($this->data['surname']) && strlen($this->data['surname']) < 2) {
+            $this->errors['surname'] = 'Please enter a valid surname with minimum 2 characters.';
         } else {
             $_POST['surname'] = $this->data['surname'];
         }
 
         // validate email
-        if(empty($this->data['email']) | strlen($this->data['email'] < 2)) {
-            $this->errors['email'] = 'Please enter a valid email with at 2 characters.';
+        if(!empty($this->data['email']) && strlen($this->data['email']) < 2) {
+            $this->errors['email'] = 'Please enter a valid email.';
         } else {
             $_POST['email'] = $this->data['email'];
         }
