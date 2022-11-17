@@ -1,33 +1,31 @@
 <?php
     
-    require('../hotel_functions/hotel_functions.php');
+    require_once '../utilities/hotel_utils.php';
 
     session_start(); 
 
     $hotels = json_decode(file_get_contents(dirname(__DIR__).'/mock_data/hotels.json'));
-    $hotel_chosen = $hotel_to_compare = $final_hotel_choice = [];
+    $hotelChosen = $hotelToCompare = $final_hotel_choice = [];
+    $_SESSION['numberOfDays'] = dateDifference($_SESSION['checkInDate'], $_SESSION['checkOutDate']);
 
-    // print_r($_SESSION);
     foreach($hotels as $hotel) {
-        global $hotel_to_compare;
+        global $hotelToCompare;
         if($hotel->name !== $_SESSION['hotel']) {
-            $hotel_to_compare = setHotel($hotel);
+            $hotelToCompare = setHotel($hotel, $_SESSION['numberOfDays']);
         } else {
-            $hotel_chosen = setHotel($hotel);
+            $hotelChosen = setHotel($hotel, $_SESSION['numberOfDays']);
         }
     }
 
-    $_SESSION['numberOfDays'] = dateDifference($_SESSION['checkInDate'], $_SESSION['checkOutDate']);
-    $_SESSION['totalCost'] = totalStayCost($_SESSION['numberOfDays'], $hotel_chosen['dailyRate']);
-
     if(isset($_POST['submit'])) {
         global $final_hotel_choice;
-        if($_POST['hotel'] === $hotel_chosen['name']) {
-            $final_hotel_choice = userFinalBookingInfo($_SESSION, $hotel_chosen['name'], $hotel_chosen['dailyRate']);
+        if($_POST['hotel'] === $hotelChosen['name']) {
+            $final_hotel_choice = userFinalBookingInfo($_SESSION, $hotelChosen['name'], $hotelChosen['dailyRate']);
         } else {
-            $final_hotel_choice = userFinalBookingInfo($_SESSION, $hotel_to_compare['name'], $hotel_to_compare['dailyRate']);
+            $final_hotel_choice = userFinalBookingInfo($_SESSION, $hotelToCompare['name'], $hotelToCompare['dailyRate']);
         }
         $_SESSION['userBooking'] = $final_hotel_choice;
+        session_destroy();
     }
 
 ?>
@@ -40,8 +38,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../styles/styles.css?v=<?php echo time(); ?>">
-    <link rel="stylesheet" href="../styles/compare.css">
+    <link rel="stylesheet" href="../css/styles.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="../css/compare.css">
 
     <title>Booking App</title>
 </head>
@@ -56,13 +54,14 @@
             <div class="card col">
                 <div class="card-body">
                     
-                    <h5 class="card-title"><?php echo $_SESSION['hotel']; ?></h5>
-                    <p class="card-text">Per night: R<?php echo $hotel_chosen['dailyRate']; ?></p>
+                    <h5 class="card-title"><?php echo $hotelChosen['name']; ?></h5>
+                    <p class="card-text">Per night: R<?php echo $hotelChosen['dailyRate']; ?></p>
                     <p class="card-text">Check-in: <?php echo $_SESSION['checkInDate']; ?></p>
                     <p class="card-text">Check-out: <?php echo $_SESSION['checkOutDate']; ?></p>
+                    <p class="card-text">Total: R<?php echo $hotelChosen['totalCost']; ?></p>
 
                     <ul>
-                        <?php foreach($hotel_chosen['features'] as $feature): ?>
+                        <?php foreach($hotelChosen['features'] as $feature): ?>
                             <li class="pill"><?php echo $feature; ?></li>
                         <?php endforeach; ?>
                     </ul>
@@ -72,11 +71,14 @@
 
             <div class="card col">
                 <div class="card-body">
-                    <h5 class="card-title"><?php echo $hotel_to_compare['name']; ?></h5>
-                    <p class="card-text">Per night R:<?php echo $hotel_to_compare['dailyRate']; ?></p>
+                    <h5 class="card-title"><?php echo $hotelToCompare['name']; ?></h5>
+                    <p class="card-text">Per night R:<?php echo $hotelToCompare['dailyRate']; ?></p>
+                    <p class="card-text">Check-in: <?php echo $_SESSION['checkInDate']; ?></p>
+                    <p class="card-text">Check-out: <?php echo $_SESSION['checkOutDate']; ?></p>
+                    <p class="card-text">Total: R<?php echo $hotelToCompare['totalCost']; ?></p>
 
                     <ul>
-                        <?php foreach($hotel_to_compare['features'] as $feature): ?>
+                        <?php foreach($hotelToCompare['features'] as $feature): ?>
                             <li class="pill"><?php echo $feature; ?></li>
                         <?php endforeach; ?>
                     </ul>
