@@ -7,11 +7,12 @@
     }
 
     // set hotel details
-    function setHotel($hotel) {
+    function setHotel($hotel, $numberOfDays) {
         $hotel = array(
                 'name' => $hotel->name,
                 'dailyRate' => $hotel->dailyRate,
                 'features' => $hotel->features,
+                'totalCost' => totalStayCost($numberOfDays, $hotel->dailyRate)
             );
         return $hotel;
     }
@@ -23,16 +24,16 @@
 
 
     // user booking information
-    function userFinalBookingInfo($booking_info, $hotel_chosen, $hotel_rate) {
+    function userFinalBookingInfo($bookingInfo, $hotelChosen, $hotelRate) {
         return array(
-            'firstname' => $booking_info['firstname'],
-            'surname' => $booking_info['surname'],
-            'email' => $booking_info['email'],
-            'chosenHotel' => $hotel_chosen,
-            'checkInDate' => $booking_info['checkInDate'],
-            'checkOutDate' => $booking_info['checkOutDate'],
-            'numberOfDays' => $booking_info['numberOfDays'],
-            'totalCost' => $booking_info['numberOfDays'] * $hotel_rate
+            'firstname' => $bookingInfo['firstname'],
+            'surname' => $bookingInfo['surname'],
+            'email' => $bookingInfo['email'],
+            'chosenHotel' => $hotelChosen,
+            'checkInDate' => $bookingInfo['checkInDate'],
+            'checkOutDate' => $bookingInfo['checkOutDate'],
+            'numberOfDays' => $bookingInfo['numberOfDays'],
+            'totalCost' => $bookingInfo['numberOfDays'] * $hotelRate
         );
     }
 
