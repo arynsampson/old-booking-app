@@ -1,5 +1,4 @@
 <?php
-    
     require_once '../utilities/hotel_utils.php';
 
     session_start(); 
@@ -27,7 +26,6 @@
         $_SESSION['userBooking'] = $final_hotel_choice;
         session_destroy();
     }
-
 ?>
 
 <!DOCTYPE html>
